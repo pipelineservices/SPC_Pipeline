@@ -7,13 +7,12 @@ pipeline {
 			}
 		}
 		stage('build') {
-			steps {
-				withSonarQubeEnv(credentialsId: 'SONAR_CLOUD', installationName: 'sonarcloud') { // You can override the credential to be used
-					sh 'mvn clean package org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar -D sonar.organization=jenkinspipelineqt -D sonar.projectKey=67f70d2f13986e813c093d2c3376cb053ad103d3'
-				}
-				junit testResults: '**/surefire-reports/*.xml'
-				archive '**/target/spring-petclinic-*.jar'
-			}
+			steps{
+                sh 'mvn clean package'
+                withSonarQubeEnv(installationName: 'SONAR_CLOUD', credentialsId: 'SONAR_CLOUD'){
+                    sh 'mvn clean package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=jenkinspipelineqt -Dsonar.projectKey=jenkinspipelineqt_sonarca'
+                }
+            }
 		
 		}
 	
